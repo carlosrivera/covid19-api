@@ -17,7 +17,7 @@ router.get('/confirmed', function(req, res, next) {
   instance.get(CONFIRMED_URI)
     .then(function (response) {
       // handle success
-      res.send(csv.timeseriesResponseToJson(response.data));
+      res.json(csv.timeseriesResponseToJson(response.data));
     })
     .catch(function (error) {
       // handle error
@@ -33,7 +33,7 @@ router.get('/deaths', function(req, res, next) {
   instance.get(DEATHS_URI)
     .then(function (response) {
       // handle success
-      res.send(csv.timeseriesResponseToJson(response.data));
+      res.json(csv.timeseriesResponseToJson(response.data));
     })
     .catch(function (error) {
       // handle error
@@ -49,7 +49,7 @@ router.get('/recovered', function(req, res, next) {
   instance.get(RECOVERED_URI)
     .then(function (response) {
       // handle success
-      res.send(csv.timeseriesResponseToJson(response.data));
+      res.json(csv.timeseriesResponseToJson(response.data));
     })
     .catch(function (error) {
       // handle error
@@ -65,7 +65,7 @@ router.get('/confirmed/after-zero', function(req, res, next) {
   instance.get(CONFIRMED_URI)
     .then(function (response) {
       // handle success
-      res.send(csv.timeseriesResponseToJson(response.data, true));
+      res.json(csv.timeseriesResponseToJson(response.data, true));
     })
     .catch(function (error) {
       // handle error
@@ -81,7 +81,7 @@ router.get('/deaths/after-zero', function(req, res, next) {
   instance.get(DEATHS_URI)
     .then(function (response) {
       // handle success
-      res.send(csv.timeseriesResponseToJson(response.data, true));
+      res.json(csv.timeseriesResponseToJson(response.data, true));
     })
     .catch(function (error) {
       // handle error
@@ -97,7 +97,7 @@ router.get('/recovered/after-zero', function(req, res, next) {
   instance.get(RECOVERED_URI)
     .then(function (response) {
       // handle success
-      res.send(csv.timeseriesResponseToJson(response.data, true));
+      res.json(csv.timeseriesResponseToJson(response.data, true));
     })
     .catch(function (error) {
       // handle error
