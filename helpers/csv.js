@@ -8,63 +8,63 @@ const timeseriesResponseToJson = (response, afterZero = false) => {
   let headers=lines[0].split(commaRegex).map(h => h.replace(quotesRegex, '$1'));
   let result = {};
 
-  for(let i=1; i < lines.length; i++) {
+  for (let i=1; i < lines.length; i++) {
     let currentline = lines[i].split(commaRegex);
     let obj = {};
-    let afterZeroCounter = 0;
 
     if (currentline[1] in result) {
-      for(let j=4; j < headers.length; j++) {
-        if (afterZero) {
-          result[currentline[1]]['Daily Cases'][afterZeroCounter] = parseInt(currentline[j]);
-
-          afterZeroCounter++;
-        } else {
-          result[currentline[1]]['Daily Cases'][headers[j]] += parseInt(currentline[j]);
-        }
+      for (let j=4; j < headers.length; j++) {
+        result[currentline[1]]['Daily Cases'][headers[j]] += parseInt(currentline[j]);
       }
     } else {
-      for(let j=2; j < headers.length; j++) {
-        if (afterZero) {
-          if (j < 4) {
-            obj[headers[j]] = (j > 1)
-              ? parseFloat(currentline[j])
-              : currentline[j]
-          } else {
-            if (parseInt(currentline[j]) > 100) {
-              if (afterZeroCounter == 0)
-                obj['Day Zero'] = headers[j];
+      for (let j=2; j < headers.length; j++) {
+        if (!('Daily Cases' in obj))
+          obj['Daily Cases'] = {};
 
-              if (!('Daily Cases' in obj))
-                obj['Daily Cases'] = {};
-
-              obj['Daily Cases'][afterZeroCounter] = parseInt(currentline[j]);
-
-              afterZeroCounter++;
-            }
-          }
+        if (j > 3) {
+          obj['Daily Cases'][headers[j]] = parseInt(currentline[j]);
         } else {
-          if (!('Daily Cases' in obj))
-            obj['Daily Cases'] = {};
-            
-          obj['Daily Cases'][headers[j]] =
-          (j > 3)
-            ? parseInt(currentline[j])
-            : (j > 1)
-              ? parseFloat(currentline[j])
-              : currentline[j];
+          obj[headers[j]] = parseFloat(currentline[j]);
         }
       }
 
-      (afterZero == true)
-        ? (afterZeroCounter > 0)
-          ? result[currentline[1]] = obj
-          : () => {}
-        : result[currentline[1]] = obj;
+      result[currentline[1]] = obj;
     }
   }
 
-  return JSON.stringify(result);
+  if (afterZero != true) {
+    return result;
+  }
+
+  let afterResult = {};
+
+  Object.keys(result).forEach((item, i) => {
+    let afterZeroCounter = 0;
+    let obj = {};
+
+    Object.keys(result[item]['Daily Cases']).forEach((caseDate, i) => {
+
+      if (result[item]['Daily Cases'][caseDate] > 100 || afterZeroCounter > 0) {
+        if (!('Daily Cases' in obj))
+          obj['Daily Cases'] = {};
+
+        obj['Daily Cases'][caseDate] = result[item]['Daily Cases'][caseDate];
+
+        afterZeroCounter++;
+      }
+    });
+
+    if (afterZeroCounter) {
+      obj['Lat'] = result[item]['Lat'];
+      obj['Long'] = result[item]['Long'];
+
+      afterResult[item] = obj;
+    }
+
+  });
+
+
+  return afterResult;
 };
 
 module.exports = {

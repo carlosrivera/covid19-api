@@ -3,5 +3,74 @@ html
   head
     title= title
     link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src="https://code.jquery.com/jquery-3.4.1.min.js"
+      integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+      crossorigin="anonymous")
+    script(src="https://cdnjs.cloudflare.com/ajax/libs/apexcharts/3.17.0/apexcharts.min.js")
+    script(type='text/javascript')
+      :uglify
+        $(function() {
+          var options = {
+            series: [],
+            labels: [],
+            chart: {
+              height: 550,
+              type: 'line',
+              zoom: {
+                type: 'x',
+                enabled: true,
+                autoScaleYaxis: true
+              },
+              toolbar: {
+                autoSelected: 'zoom'
+              },
+              animations: {
+                enabled: true
+              }
+            },
+            stroke: {
+              width: [1],
+              curve: 'straight'
+            },
+            title: {
+              text: 'Growth since day zero'
+            },
+            xaxis: {
+            },
+          };
+
+          var filter = ['Mexico', 'France', 'Italy', 'Spain', 'US', 'Germany', 'Iran', 'Brazil', 'Chile', 'Colombia', 'Canada'];
+
+          $.getJSON("/api/v1/timeseries/confirmed/after-zero")
+            .done(function(data, status) {
+
+              $.each(data, function(key, val) {
+                if (filter.includes(key)) {
+                  console.log(val['Daily Cases']);
+
+                  var arr = [];
+
+                  for (var i in val['Daily Cases']) {
+                     arr.push(val['Daily Cases'][i]);
+                  }
+
+                  options.series.push({
+                    name: key,
+                    data: arr
+                  });
+                }
+              });
+
+              if ($("#chart").length) {
+                var chart = new ApexCharts(
+                  document.querySelector("#chart"),
+                  options
+                );
+
+                chart.render();
+              }
+            });
+        });
+
   body
     block content
