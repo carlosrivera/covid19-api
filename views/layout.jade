@@ -46,7 +46,7 @@ html
             },
           };
 
-          var filter = ['Mexico', 'France', 'Italy', 'Spain', 'US', 'Germany', 'Iran', 'Brazil', 'Chile', 'Colombia', 'Canada'];
+          var filter = ['Mexico', 'France', 'Italy', 'Spain', 'US', 'Germany', 'Iran', 'Brazil', 'Chile', 'Colombia', 'Canada', 'Peru', 'Argentina'];
 
           $.getJSON("/api/v1/timeseries/confirmed/after-zero")
             .done(function(data, status) {
@@ -67,6 +67,8 @@ html
                   });
                 }
               });
+
+              options.series.sort();
 
               if ($("#chart").length) {
                 var chart = new ApexCharts(
