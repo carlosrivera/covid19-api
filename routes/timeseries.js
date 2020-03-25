@@ -8,9 +8,9 @@ const instance = axios.create({
   baseURL: 'https://github.com/CSSEGISandData/COVID-19/raw/master/csse_covid_19_data/csse_covid_19_time_series/',
 });
 
-const CONFIRMED_URI = '/time_series_19-covid-Confirmed.csv';
+const CONFIRMED_URI = '/time_series_covid19_confirmed_global.csv';
 const DEATHS_URI = '/time_series_19-covid-Deaths.csv';
-const RECOVERED_URI = '/time_series_19-covid-Recovered.csv';
+const RECOVERED_URI = '/time_series_covid19_deaths_global.csv';
 
 /* GET confirmed listing. */
 router.get('/confirmed', function(req, res, next) {
